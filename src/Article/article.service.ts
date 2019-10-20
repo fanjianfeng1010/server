@@ -1,9 +1,18 @@
-// import { Injectable } from '@nestjs/common';
-// import moduleName from '@nestjs/';
+import { Model } from 'mongoose'
+import { Injectable, Inject } from '@nestjs/common'
+import { Article } from './interface/article.interface'
+import { CreateArticleDto } from './dto/create-article.dto'
 
-// @Injectable()
-// export class ArticleService {
-//   constructor(@InjectRe)
-// }
+@Injectable()
+export class ArticlesService {
+  constructor(@Inject('ARTICLE_MODEL') private readonly articleModel: Model<Article>) {}
 
-export const a = 'b'
+  async create(createArticleDto: CreateArticleDto): Promise<Article> {
+    const createArticle = new this.articleModel(createArticleDto)
+    return await createArticle.save()
+  }
+
+  async findAll(): Promise<Article[]> {
+    return await this.articleModel.find().exec()
+  }
+}
