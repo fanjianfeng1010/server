@@ -1,8 +1,16 @@
-import { Module } from '@nestjs/common'
-import { databaseProviders } from './database.providers'
+import { Module, Global } from '@nestjs/common';
+import * as mongoose from 'mongoose';
+export const databaseProviders = [
+  {
+    provide: 'DATABASE_CONNECTION',
+    useFactory: async (): Promise<typeof mongoose> =>
+      await mongoose.connect('mongodb://localhost/nest'),
+  },
+];
+/*  */
 
+@Global()
 @Module({
   providers: [...databaseProviders],
-  exports: [...databaseProviders],
 })
 export class DatabaseModule {}
